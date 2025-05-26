@@ -8,3 +8,8 @@
 ### Plataformas: Escritorio 
 
 ## Estado Actual: Configuración inical de la estructura del proyecto
+
+
+**Enlace a la Wiki del Proyecto (Propuesta Detallada):**
+[Ver la Propuesta Completa del Proyecto
+aquí](https://github.com/Palermukii/moto-repartidor/wiki/Home)
