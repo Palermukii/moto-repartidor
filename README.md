@@ -1,4 +1,4 @@
-Titulo: Moto Repartidor Simulator #
+# Titulo: Moto Repartidor Simulator
 
 Integrantes: Tomas Agustín Palermo, Santiago Valentin Rossetti Iñiguez, Franco Montesano 
 
