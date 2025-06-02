@@ -10,6 +10,7 @@
 ### Tecnologias clave:
 - JAVA.
 - LibGDX.
+- IntelliJ IDEA y Eclipse (dependiendo la computadora).
 
 ### Plataforma: Escritorio.
 
