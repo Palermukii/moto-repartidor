@@ -14,6 +14,16 @@
 
 ### Plataforma: Escritorio.
 
+## Como compilar y ejecutar:
+1. Descargue el ZIP del repositorio, haciendo "clic" en el boton verde que dice "code"
+2. Inserte ese ZIP en una carpeta
+3. Abra el IDE Eclipse
+4. Seleccione la opción "file" luego "import" y por ultimo "existing gradle proyect"
+5. Añada la carpeta con el archivo zip ya descomprimido
+6. Busque la carpeta llamada src/main/java, dentro habrá un paquete llamado "com.motorepartidorsimulator.lwjgl3". En ese paquete se encontrará el archivo "Lwjgl3Launcher"
+7. Ejecute el archivo "Lwjgl3Launcher"
+8. listo
+
 ## Estado Actual: Configuración inicial de la estructura del proyecto.
 
 
