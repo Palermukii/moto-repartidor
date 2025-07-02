@@ -15,14 +15,14 @@
 ### Plataforma: Escritorio.
 
 ## Como compilar y ejecutar:
-1. Descargue el ZIP del repositorio, haciendo "clic" en el boton verde que dice "code"
-2. Inserte ese ZIP en una carpeta
-3. Abra el IDE Eclipse
-4. Seleccione la opción "file" luego "import" y por ultimo "existing gradle proyect"
-5. Añada la carpeta con el archivo zip ya descomprimido
-6. Busque la carpeta llamada src/main/java, dentro habrá un paquete llamado "com.motorepartidorsimulator.lwjgl3". En ese paquete se encontrará el archivo "Lwjgl3Launcher"
-7. Ejecute el archivo "Lwjgl3Launcher"
-8. listo
+0. Clone el repositorio en tu máquina local con el comando "git clone https://github.com/Palermukii/moto-repartidor.git"
+1. Entre a la carpeta del proyecto usando "cd moto-repartidor" .
+2. Para ejecutar el proyecto directamente desde la consola, una vez dentro de la carpeta, usá el comando ./gradlew run (o gradlew.bat run en Windows)
+3. En el Eclipse IDE seleccione la opción "file" luego "import" y por ultimo "existing gradle proyect"
+4. Para ejecutar el proyecto directamente desde la consola, una vez dentro de la carpeta, usá el comando ./gradlew run (o gradlew.bat run en Windows)
+5. Busque la carpeta llamada src/main/java, dentro habrá un paquete llamado "com.motorepartidorsimulator.lwjgl3". En ese paquete se encontrará el archivo "Lwjgl3Launcher"
+6. Ejecute el archivo "Lwjgl3Launcher"
+7. listo
 
 ## Estado Actual: Configuración inicial de la estructura del proyecto.
 
