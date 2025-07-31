@@ -1,0 +1,86 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mapa.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        ":/automap-tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets/Mapaa.tmx": {
+            "scale": 0.8037890624999999,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 640.0933080623998,
+                "y": 359.5470671137678
+            }
+        },
+        "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets/Mapaa.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets/mapa.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 730,
+                "y": 533.3333333333334
+            }
+        },
+        "CP_V1.0.4.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Map.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 640.6666666666665,
+                "y": 548
+            }
+        },
+        "Mapaa.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "mapa.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 99.33333333333326,
+                "y": 184
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/Tomas/Proyecto",
+    "last.externalTilesetPath": "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets",
+    "last.imagePath": "C:/Users/Tomas/Proyecto/CP_V1.1.0_nyknck/CP_V1.1.0_nyknck/CP_V1.0.4_nyknck",
+    "map.height": 45,
+    "map.lastUsedExportFilter": "Archivos de mapas de Tiled (*.tmx *.xml)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 80,
+    "openFiles": [
+        "mapa.tmx",
+        "Mapaa.tsx"
+    ],
+    "project": "Map.tiled-project",
+    "recentFiles": [
+        "Mapaa.tsx",
+        "mapa.tmx",
+        "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets/mapa.tmx",
+        "Map.tmx",
+        "C:/Users/Tomas/Desktop/Moto/moto-repartidor/assets/Mapaa.tmx",
+        "CP_V1.0.4.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

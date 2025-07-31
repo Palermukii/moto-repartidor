@@ -1,34 +1,50 @@
 package com.motorepartidorsimulator;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.Game;
+import com.motorepartidorsimulator.screens.MainMenuScreen;
+import com.motorepartidorsimulator.screens.GameScreen;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Juego extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private Texture image;
+/**
+ * Clase principal del juego que gestiona las diferentes pantallas (menús, juego, etc.).
+ */
+public class Juego extends Game {
+
+    private MainMenuScreen mainMenuScreen;
+    private GameScreen gameScreen;
+
+    // Ruta del sprite por defecto cuando se inicia el juego directamente
+    private static final String DEFAULT_SPRITE_PATH = "sprites/sprite.png";
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
+        // Al iniciar el juego, mostramos la pantalla del menú principal
+        mainMenuScreen = new MainMenuScreen(this);
+        setScreen(mainMenuScreen);
     }
 
-    @Override
-    public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-        batch.draw(image, 140, 210);
-        batch.end();
+    // Métodos para cambiar de pantalla
+    public void showMainMenuScreen() {
+        if (mainMenuScreen == null) {
+            mainMenuScreen = new MainMenuScreen(this);
+        }
+        setScreen(mainMenuScreen);
+    }
+
+    public void showGameScreen() {
+        // Creamos una nueva instancia de GameScreen cada vez que se inicia un juego
+        // para asegurar un estado limpio.
+        if (gameScreen != null) {
+            gameScreen.dispose(); // Libera los recursos de la pantalla de juego anterior si existe
+        }
+        gameScreen = new GameScreen(this, DEFAULT_SPRITE_PATH); // Usa el sprite por defecto
+        setScreen(gameScreen);
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+        super.dispose();
+        if (mainMenuScreen != null) mainMenuScreen.dispose();
+        if (gameScreen != null) gameScreen.dispose();
     }
 }
+
