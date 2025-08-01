@@ -12,6 +12,10 @@
 - LibGDX.
 - IntelliJ IDEA y Eclipse (dependiendo la computadora).
 
+### Ultimas caracteristicas añadidas:
+
+El jugador puede moverse libremente por la ciudad utilizando su moto con los botones A (izquierda), W (Arriba), S (Abajo) y D (Derecha). Como el juego se encuentra en una fase de desarrollo, estamos trabajando en la implementación de las colisiones con las edificaciones de la ciudad, la aparición de objetivos y el correcto desarrollo del HUD.
+
 ### Plataforma: Escritorio.
 
 ## Como compilar y ejecutar:
