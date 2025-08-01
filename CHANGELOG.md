@@ -2,7 +2,19 @@
 ## En este archivo se lleva un registro de las modificaciones importantes que se realizan en el proyecto a lo largo del tiempo.
 
 ## [Unreleased]  
+- Colisiones.
+- HUD.
+- Misiones.
+- Mecanica de recolección de paquetes.
+- Policia funcional.
 
+## [0.1.1] - 2025-07-31
+### Added
+- Menu principal donde se da la opción de ingresar al juego o salir.
+- Mapa preliminar de la ciudad creado con Tiled.
+- Avatar del usuario.
+- Mecanicas de movimiento en 8 direcciones.
+- Música en el menu.
 
 
 ## [0.1.0] - 2025-05-26
