@@ -35,11 +35,11 @@
                 12,
                 13
             ],
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 0.25,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 2849.333333333333,
-                "y": 439.33333333333337
+                "x": 1876,
+                "y": 2406
             }
         },
         "Map.tmx#egpt": {
@@ -74,14 +74,13 @@
     "map.tileWidth": 16,
     "map.width": 400,
     "openFiles": [
-        "Map.tmx",
-        "Map..tmx"
+        "Map.tmx"
     ],
     "project": "Map.tiled-project",
     "recentFiles": [
-        "egpt.tsx",
-        "Map..tmx",
         "Map.tmx",
+        "Map..tmx",
+        "egpt.tsx",
         "Mapa.tmx"
     ],
     "tileset.embedInMap": true,
