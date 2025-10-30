@@ -17,8 +17,8 @@ public class Main extends Game {
 
     private AudioManager audio; // AudioManager global
 
-    private static final String DEFAULT_SPRITE_PATH = "sprites/sprite.png";
-    private static final String DEFAULT_SPRITE_PATH2 = "sprites/sprite2.png";
+
+
 
     @Override
     public void create() {
@@ -26,7 +26,7 @@ public class Main extends Game {
         audio = new AudioManager();
 
         // Pantalla inicial
-        mainMenuScreen = new MainMenuScreen(this);
+        mainMenuScreen = new MainMenuScreen(this, this.audio);
         setScreen(mainMenuScreen);
     }
 
@@ -38,7 +38,7 @@ public class Main extends Game {
     /** Vuelve al menú principal. */
     public void showMainMenu() {
         if (mainMenuScreen == null) {
-            mainMenuScreen = new MainMenuScreen(this);
+            mainMenuScreen = new MainMenuScreen(this, audio);
         }
         setScreen(mainMenuScreen);
     }
@@ -48,7 +48,7 @@ public class Main extends Game {
         if (gameScreen != null) {
             gameScreen.dispose();
         }
-        gameScreen = new GameScreen(this, DEFAULT_SPRITE_PATH, DEFAULT_SPRITE_PATH2);
+        gameScreen = new GameScreen(this, audio);
         setScreen(gameScreen);
     }
 

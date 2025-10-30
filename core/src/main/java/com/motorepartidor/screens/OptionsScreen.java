@@ -1,5 +1,6 @@
 package com.motorepartidor.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.motorepartidor.Main;
+import com.motorepartidor.audio.AudioManager;
 
 import java.util.ArrayList;
 import java.util.List; // Explicitly using java.util.List
@@ -40,13 +42,13 @@ public class OptionsScreen implements Screen {
     private static final String KEY_WIDTH = "width";
     private static final String KEY_HEIGHT = "height";
 
-    private final Main game;
+    private final Game game;
+    public AudioManager audio;
     private final Screen previousScreen; // <-- NUEVO
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private Stage stage;
     private Skin skin;
-
     private Slider volumeSlider;
     private Label volumeValue;
     private CheckBox fullscreenCheck;
@@ -55,14 +57,12 @@ public class OptionsScreen implements Screen {
     private java.util.List<int[]> windowedResolutions;
 
 
-    // Constructor para volver al MENÚ por defecto (por compatibilidad)
-    public OptionsScreen(Main game) {
-        this(game, new MainMenuScreen(game));
-    }
+
 
     // Constructor para volver a la pantalla anterior real (GameScreen, Menú, etc.)
-    public OptionsScreen(Main game, Screen previousScreen) {
+    public OptionsScreen(Game game, Screen previousScreen, AudioManager audio) {
         this.game = game;
+        this.audio = audio;
         this.previousScreen = previousScreen;
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(1280, 720, camera);
@@ -108,8 +108,8 @@ public class OptionsScreen implements Screen {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 volumeValue.setText(String.format("%d%%", Math.round(volumeSlider.getValue()*100)));
                 // Removed try-catch, added check for game.getAudio()
-                if (game.getAudio() != null) {
-                    game.getAudio().setMasterVolume(volumeSlider.getValue());
+                if (OptionsScreen.this.audio != null) {
+                    OptionsScreen.this.audio.setMasterVolume(volumeSlider.getValue());
                 }
             }
         });
@@ -139,6 +139,8 @@ public class OptionsScreen implements Screen {
 
         TextButton applyBtn = new TextButton("Aplicar", skin);
         TextButton backBtn  = new TextButton("Volver",  skin);
+        TextButton exitBtn  = new TextButton("Salir",  skin);
+
 
         applyBtn.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
@@ -151,9 +153,15 @@ public class OptionsScreen implements Screen {
                 game.setScreen(previousScreen);
             }
         });
+        exitBtn.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
 
         root.add(applyBtn).width(220).height(50).padTop(15);
         root.add(backBtn).width(220).height(50).padTop(15);
+        root.add(exitBtn).width(220).height(50).padTop(15);
     }
 
     private void applyChanges() {
@@ -170,8 +178,8 @@ public class OptionsScreen implements Screen {
         prefs.flush();
 
         // Check added for game.getAudio()
-        if (game.getAudio() != null) {
-            game.getAudio().setMasterVolume(vol);
+        if (this.audio != null) {
+            this.audio.setMasterVolume(vol);
         }
 
         try {

@@ -8,6 +8,7 @@ public class GameInputProcessor implements InputProcessor {
     private boolean upPressed, downPressed, leftPressed, rightPressed;
     private boolean arrowUpPressed, arrowDownPressed, arrowLeftPressed, arrowRightPressed;
     private boolean ePressed, pPressed;
+    private boolean gPressed, lPressed;
 
     public boolean isUpPressed() { return upPressed; }
     public boolean isDownPressed() { return downPressed; }
@@ -22,6 +23,10 @@ public class GameInputProcessor implements InputProcessor {
     public boolean isEPressed() { return ePressed; }
     public boolean isPPressed() { return pPressed; }
 
+    // Nuevas teclas para pedidos
+    public boolean isGPressed() { return gPressed; } // Jugador 1 aceptar/entregar
+    public boolean isLPressed() { return lPressed; } // Jugador 2 aceptar/entregar
+
     @Override
     public boolean keyDown(int keycode) {
         switch(keycode) {
@@ -29,12 +34,17 @@ public class GameInputProcessor implements InputProcessor {
             case Input.Keys.S: downPressed = true; break;
             case Input.Keys.A: leftPressed = true; break;
             case Input.Keys.D: rightPressed = true; break;
+
             case Input.Keys.UP: arrowUpPressed = true; break;
             case Input.Keys.DOWN: arrowDownPressed = true; break;
             case Input.Keys.LEFT: arrowLeftPressed = true; break;
             case Input.Keys.RIGHT: arrowRightPressed = true; break;
+
             case Input.Keys.E: ePressed = true; break;
             case Input.Keys.P: pPressed = true; break;
+
+            case Input.Keys.G: gPressed = true; break;
+            case Input.Keys.L: lPressed = true; break;
         }
         return false;
     }
@@ -46,12 +56,17 @@ public class GameInputProcessor implements InputProcessor {
             case Input.Keys.S: downPressed = false; break;
             case Input.Keys.A: leftPressed = false; break;
             case Input.Keys.D: rightPressed = false; break;
+
             case Input.Keys.UP: arrowUpPressed = false; break;
             case Input.Keys.DOWN: arrowDownPressed = false; break;
             case Input.Keys.LEFT: arrowLeftPressed = false; break;
             case Input.Keys.RIGHT: arrowRightPressed = false; break;
+
             case Input.Keys.E: ePressed = false; break;
             case Input.Keys.P: pPressed = false; break;
+
+            case Input.Keys.G: gPressed = false; break;
+            case Input.Keys.L: lPressed = false; break;
         }
         return false;
     }

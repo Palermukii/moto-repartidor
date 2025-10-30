@@ -1,5 +1,7 @@
 package com.motorepartidor.screens;
 
+import com.badlogic.gdx.Audio;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -24,19 +26,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.motorepartidor.Main;
+import com.motorepartidor.audio.AudioManager;
 
 public class MainMenuScreen implements Screen {
 
-    private final Main game;
+    private final Game game;
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private Stage stage;
     private Skin skin;
+    private AudioManager audio;
 
-    public MainMenuScreen(Main game) {
+    public MainMenuScreen(Game game, AudioManager audio) {
         this.game = game;
         this.camera = new OrthographicCamera();
         this.viewport = new FitViewport(1280, 720, camera);
+        this.audio = audio;
     }
 
     @Override
@@ -47,8 +52,8 @@ public class MainMenuScreen implements Screen {
 
         // Música de menú (opcional y seguro)
         try {
-            if (game.getAudio() != null) {
-                game.getAudio().playMusic("audio/menu.ogg", true, 1f);
+            if (this.audio != null) {
+                this.audio.playMusic("audio/mainmenu.wav", true, 0.1f);
             }
         } catch (Exception e) {
             Gdx.app.error("MainMenu", "No se pudo reproducir musica de menú", e);
@@ -70,7 +75,7 @@ public class MainMenuScreen implements Screen {
             @Override public void clicked(InputEvent event, float x, float y) {
                 try {
                     // Si tu GameScreen requiere otra firma, cámbialo acá:
-                    game.setScreen(new GameScreen(game, "sprites/sprite.png", "sprites/sprite2.png"));
+                    game.setScreen(new GameScreen(game, audio));
                 } catch (Throwable t) {
                     Gdx.app.error("MainMenu", "Error al abrir GameScreen", t);
                 }
@@ -79,7 +84,7 @@ public class MainMenuScreen implements Screen {
         optionsBtn.addListener(new ClickListener() {
             @Override public void clicked(InputEvent event, float x, float y) {
                 try {
-                    game.setScreen(new OptionsScreen(game));
+                    game.setScreen(new OptionsScreen(game, MainMenuScreen.this, audio));
                 } catch (Throwable t) {
                     Gdx.app.error("MainMenu", "Error al abrir OptionsScreen", t);
                 }
@@ -125,7 +130,7 @@ public class MainMenuScreen implements Screen {
 
         // Parar música de menú al salir (si querés silencio en game/options)
         try {
-            if (game.getAudio() != null) game.getAudio().stopMusic();
+            if (this.audio != null) this.audio.stopMusic();
         } catch (Exception ignored) {}
     }
 

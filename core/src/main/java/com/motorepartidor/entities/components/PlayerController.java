@@ -71,7 +71,7 @@ public class PlayerController {
 
         // 4. Consumo de gasolina
         if (Math.abs(velocidadActual) > 0) {
-            float consumo = (Math.abs(velocidadActual) * 0.0005f + (input.accelerate() ? 0.02f : 0f)) * dt;
+            float consumo = (Math.abs(velocidadActual) * 0.005f + (input.accelerate() ? 0.02f : 0f)) * dt;
             gasolinaActual -= consumo;
             if (gasolinaActual < 0) {
                 gasolinaActual = 0;
