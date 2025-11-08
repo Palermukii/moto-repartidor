@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="225" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="620">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="400" height="225" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="635">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="4096" columns="64">
   <image source="CP_V1.1.0_nyknck/CP_V1.0.4_nyknck/CP_V1.0.4_nyknck/CP_V1.0.4.png" width="1024" height="1024"/>
   <tile id="537">
@@ -8,7 +8,7 @@
    </objectgroup>
   </tile>
  </tileset>
- <tileset firstgid="4097" name="Sprite - PabloJ" tilewidth="16" tileheight="16" tilecount="252" columns="2">
+ <tileset firstgid="4097" name="Sprite - PabloJ" tilewidth="16" tileheight="16" tilecount="4" columns="2">
   <image source="Sprite - PabloJ.png" width="32" height="40"/>
  </tileset>
  <layer id="16" name="Suelo" width="400" height="225">
@@ -1686,5 +1686,19 @@
  </objectgroup>
  <objectgroup id="20" name="entregas">
   <object id="617" x="496" y="48" width="48" height="48"/>
+  <object id="620" x="2050" y="590.667" width="76.6667" height="94.6667"/>
+  <object id="621" x="3314.67" y="650.667" width="60.3333" height="53.3333"/>
+  <object id="622" x="3713.5" y="16.5" width="43.5" height="96.5"/>
+  <object id="623" x="5359" y="3470" width="31" height="47"/>
+  <object id="624" x="30.6667" y="3526.67" width="65.6667" height="42.3333"/>
+  <object id="625" x="6178" y="64" width="47.5" height="49"/>
+  <object id="626" x="6177" y="517.5" width="63" height="44.5"/>
+  <object id="627" x="3474" y="464.5" width="76.5" height="95"/>
+  <object id="629" x="1072" y="1664" width="48" height="48"/>
+  <object id="630" x="720" y="3376" width="32" height="48"/>
+  <object id="631" x="3120" y="3344" width="64" height="48"/>
+  <object id="632" x="4880" y="1968" width="48" height="96"/>
+  <object id="633" x="6064" y="2160" width="64" height="48"/>
+  <object id="634" x="3104" y="1056" width="48" height="96"/>
  </objectgroup>
 </map>

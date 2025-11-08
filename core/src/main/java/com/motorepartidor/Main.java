@@ -16,6 +16,8 @@ public class Main extends Game {
     private GameScreen gameScreen;
 
     private AudioManager audio; // AudioManager global
+    private int lastWinner = 0;
+
 
 
 
@@ -50,6 +52,21 @@ public class Main extends Game {
         }
         gameScreen = new GameScreen(this, audio);
         setScreen(gameScreen);
+    }
+
+    public void onMatchFinished(int winnerIndex) {
+        this.lastWinner = winnerIndex; // 0, 1 o 2
+
+        // Volver al menú principal reutilizando la instancia si existe
+        if (mainMenuScreen == null) {
+            mainMenuScreen = new MainMenuScreen(this, audio);
+        }
+
+        setScreen(mainMenuScreen);
+    }
+
+    public int getLastWinner() {
+        return lastWinner;
     }
 
     @Override

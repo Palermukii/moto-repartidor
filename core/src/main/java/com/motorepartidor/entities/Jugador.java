@@ -166,6 +166,5 @@ public class Jugador {
 
     public void restarDinero(int cantidad) {
         this.dinero -= cantidad;
-        if (this.dinero < 0) this.dinero = 0;
     }
 }

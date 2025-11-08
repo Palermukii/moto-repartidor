@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-// ⛔️ quitado: import com.badlogic.gdx.audio.Music;
+import com.motorepartidor.Main;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -65,22 +65,25 @@ public class GameScreen implements Screen {
 
 
     private AudioManager audio;
-    private Jugador jugador1;
-    private Jugador jugador2;
+
+    // Jugadores como array
+    private Jugador[] jugadores = new Jugador[2];
+    private final boolean[] playerInGasArea = new boolean[2];
+    private final boolean[] nearDealer = new boolean[2];
+    private final boolean[] nearDrop = new boolean[2];
+    private boolean playersAreColliding = false;
+    private boolean[] playerIsCollidingObstacle = new boolean[2];
 
     private GameInputProcessor inputProcessor;
 
     private boolean eKeyHandled = false;
     private boolean pKeyHandled = false;
+    private boolean gKeyHandled = false, lKeyHandled = false;
 
-    private boolean playersAreColliding = false;
-    private boolean player1IsCollidingWithObstacle = false;
-    private boolean player2IsCollidingWithObstacle = false;
     private static final String DEFAULT_SPRITE_PATH = "sprites/sprite.png";
     private static final String DEFAULT_SPRITE_PATH2 = "sprites/sprite2.png";
 
-    private boolean player1InGasArea = false;
-    private boolean player2InGasArea = false;
+
 
     private DeliveryIndicator p1Indicator = new DeliveryIndicator();
     private DeliveryIndicator p2Indicator = new DeliveryIndicator();
@@ -98,10 +101,8 @@ public class GameScreen implements Screen {
     private ActiveDelivery p1Delivery = null;
     private ActiveDelivery p2Delivery = null;
 
-    // Flags de proximidad y control de “edge” de teclas
-    private boolean p1NearDealer = false, p2NearDealer = false;
-    private boolean p1NearDrop   = false, p2NearDrop   = false;
-    private boolean gKeyHandled = false, lKeyHandled = false;
+
+
 
     private final Random rng = new Random();
 
@@ -151,8 +152,8 @@ public class GameScreen implements Screen {
         }
 
         // Ahora se crea el Jugador después de que las capas del mapa están cargadas.
-        jugador1 = new Jugador(chosenSpritePath, 18, 36, new Vector2(100, 3470), collisionLayer);
-        jugador2 = new Jugador(chosenSpritePath2, 18, 36, new Vector2(6400, 1), collisionLayer);
+        jugadores[0] = new Jugador(chosenSpritePath, 18, 36, new Vector2(1700, 500), collisionLayer);
+        jugadores[1] = new Jugador(chosenSpritePath2, 18, 36, new Vector2(1700, 450), collisionLayer);
 
         camera1 = new OrthographicCamera();
         viewport1 = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera1);
@@ -180,7 +181,7 @@ public class GameScreen implements Screen {
             Gdx.app.error("GameScreen", "¡ERROR! Capa 'entregas' no encontrada en el mapa.");
         } else {
             for (MapObject obj : entregasLayer.getObjects()) {
-                if (obj instanceof RectangleMapObject) {
+                    if (obj instanceof RectangleMapObject) {
                     entregaAreas.add(((RectangleMapObject) obj).getRectangle());
                 }
             }
@@ -199,13 +200,14 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // --- GASOLINA / INPUT ---
-        player1InGasArea = checkPlayerInGasArea(jugador1);
-        player2InGasArea = checkPlayerInGasArea(jugador2);
+            playerInGasArea[0] = checkPlayerInGasArea(jugadores[0]);
+            playerInGasArea[1] = checkPlayerInGasArea(jugadores[1]);
 
-        if (player1InGasArea && inputProcessor.isEPressed() && !eKeyHandled && jugador1.getDinero() >= 10) {
-            int restaj1 = 100 - (int)jugador1.getGasolina();
-            jugador1.restarDinero(restaj1);
-            jugador1.recargarGasolina(100);
+
+        if (playerInGasArea[0] && inputProcessor.isEPressed() && !eKeyHandled) {
+            int restaj1 = 100 - (int)jugadores[0].getGasolina();
+            jugadores[0].restarDinero(restaj1);
+            jugadores[0].recargarGasolina(100);
             eKeyHandled = true;
             if (this.audio != null) this.audio.playSound("audio/refuel.wav", 1.0f);
             Gdx.app.log("GameScreen", "¡Jugador 1 recargó gasolina!");
@@ -213,9 +215,10 @@ public class GameScreen implements Screen {
             eKeyHandled = false;
         }
 
-        if (player2InGasArea && inputProcessor.isPPressed() && !pKeyHandled && jugador2.getDinero() >= 10) {
-            jugador2.recargarGasolina(100);
-            jugador2.restarDinero(10);
+        if (playerInGasArea[1] && inputProcessor.isPPressed() && !pKeyHandled) {
+            int restaj2 = 100 - (int)jugadores[1].getGasolina();
+            jugadores[1].restarDinero(restaj2);
+            jugadores[1].recargarGasolina(100);
             pKeyHandled = true;
             if (this.audio != null) this.audio.playSound("audio/refuel.wav", 1.0f);
             Gdx.app.log("GameScreen", "¡Jugador 2 recargó gasolina!");
@@ -224,22 +227,24 @@ public class GameScreen implements Screen {
         }
 
         // --- PROXIMIDAD A ZONAS ---
-        p1NearDealer = isInAny(jugador1, dealerAreas);
-        p2NearDealer = isInAny(jugador2, dealerAreas);
-        p1NearDrop   = (p1Delivery != null) && jugador1.getBounds().overlaps(p1Delivery.target);
-        p2NearDrop   = (p2Delivery != null) && jugador2.getBounds().overlaps(p2Delivery.target);
+        nearDealer[0] = isInAny(jugadores[0],dealerAreas);
+        nearDealer[1] = isInAny(jugadores[1],dealerAreas);
+
+
+        nearDrop[0]   = (p1Delivery != null) && jugadores[0].getBounds().overlaps(p1Delivery.target);
+        nearDrop[1]   = (p2Delivery != null) && jugadores[1].getBounds().overlaps(p2Delivery.target);
 
         // --- ACEPTAR / ENTREGAR: JUGADOR 1 (G) ---
         if (inputProcessor.isGPressed()) {
             if (!gKeyHandled) {
-                if (p1Delivery == null && p1NearDealer) {
+                if (p1Delivery == null && nearDealer[0]) {
                     p1Delivery = createDelivery();
                     if (p1Delivery != null) {
                         if (this.audio != null) this.audio.playSound("audio/pickup.wav", 1f);
                         Gdx.app.log("GameScreen", p1Delivery.dangerous ? "P1 tomó pedido PELIGROSO" : "P1 tomó pedido");
                     }
-                } else if (p1Delivery != null && p1NearDrop) {
-                    jugador1.sumarDinero(p1Delivery.reward);
+                } else if (p1Delivery != null && nearDrop[0]) {
+                    jugadores[0].sumarDinero(p1Delivery.reward);
                     if (this.audio != null) this.audio.playSound("audio/deliver.wav", 1f);
                     Gdx.app.log("GameScreen", "P1 entregó pedido. +$" + p1Delivery.reward);
                     p1Delivery = null;
@@ -253,14 +258,14 @@ public class GameScreen implements Screen {
         // --- ACEPTAR / ENTREGAR: JUGADOR 2 (L) ---
         if (inputProcessor.isLPressed()) {
             if (!lKeyHandled) {
-                if (p2Delivery == null && p2NearDealer) {
+                if (p2Delivery == null && nearDealer[1]) {
                     p2Delivery = createDelivery();
                     if (p2Delivery != null) {
                         if (this.audio != null) this.audio.playSound("audio/pickup.wav", 1f);
                         Gdx.app.log("GameScreen", p2Delivery.dangerous ? "P2 tomó pedido PELIGROSO" : "P2 tomó pedido");
                     }
-                } else if (p2Delivery != null && p2NearDrop) {
-                    jugador2.sumarDinero(p2Delivery.reward);
+                } else if (p2Delivery != null && nearDrop[1]) {
+                    jugadores[1].sumarDinero(p2Delivery.reward);
                     if (this.audio != null) this.audio.playSound("audio/deliver.wav", 1f);
                     Gdx.app.log("GameScreen", "P2 entregó pedido. +$" + p2Delivery.reward);
                     p2Delivery = null;
@@ -289,47 +294,47 @@ public class GameScreen implements Screen {
         }
 
         // --- UPDATE JUGADORES ---
-        jugador1.update(new PlayerController.PlayerInput() {
+        jugadores[0].update(new PlayerController.PlayerInput() {
             @Override public boolean accelerate() { return inputProcessor.isUpPressed(); }
             @Override public boolean brake() { return inputProcessor.isDownPressed(); }
             @Override public boolean turnLeft() { return inputProcessor.isLeftPressed(); }
             @Override public boolean turnRight() { return inputProcessor.isRightPressed(); }
         }, delta);
-
-        jugador2.update(new PlayerController.PlayerInput() {
+        jugadores[1].update(new PlayerController.PlayerInput() {
             @Override public boolean accelerate() { return inputProcessor.isArrowUpPressed(); }
             @Override public boolean brake() { return inputProcessor.isArrowDownPressed(); }
             @Override public boolean turnLeft() { return inputProcessor.isArrowLeftPressed(); }
             @Override public boolean turnRight() { return inputProcessor.isArrowRightPressed(); }
         }, delta);
 
+
         // --- COLISIONES / DAÑO ---
-        boolean p1CollidingWithObstacle = checkPolygonCollisions(jugador1.getPolygon());
-        if (p1CollidingWithObstacle && !player1IsCollidingWithObstacle) {
-            jugador1.restarVida(1);
-            player1IsCollidingWithObstacle = true;
-        } else if (!p1CollidingWithObstacle) {
-            player1IsCollidingWithObstacle = false;
+        boolean[] playerCollidingWithObstacle = new boolean[2];
+        for(int i = 0; i < jugadores.length; i++) {
+            playerCollidingWithObstacle[i] = checkPolygonCollisions(jugadores[i].getPolygon());
+            if(playerCollidingWithObstacle[i] && !playerIsCollidingObstacle[i]) {
+                jugadores[i].restarVida(1);
+                playerIsCollidingObstacle[i] = true;
+            }
+            else if (!playerCollidingWithObstacle[i]) {
+                playerIsCollidingObstacle[i] = false;
+            }
         }
 
-        boolean p2CollidingWithObstacle = checkPolygonCollisions(jugador2.getPolygon());
-        if (p2CollidingWithObstacle && !player2IsCollidingWithObstacle) {
-            jugador2.restarVida(1);
-            player2IsCollidingWithObstacle = true;
-        } else if (!p2CollidingWithObstacle) {
-            player2IsCollidingWithObstacle = false;
-        }
-
-        if (Intersector.overlapConvexPolygons(jugador1.getPolygon(), jugador2.getPolygon())) {
+        if (Intersector.overlapConvexPolygons(jugadores[0].getPolygon(), jugadores[1].getPolygon())) {
             if (!playersAreColliding) {
                 Gdx.app.log("GameScreen", "¡Colisión entre jugadores detectada!");
-                jugador1.restarVida(10);
-                jugador2.restarVida(10);
+                jugadores[0].restarVida(10);
+                jugadores[1].restarVida(10);
                 playersAreColliding = true;
             }
         } else {
             playersAreColliding = false;
         }
+
+        checkDeathAndEndMatch();
+
+
 
         // --- RENDER SPLIT-SCREEN ---
         int halfW = Gdx.graphics.getWidth() / 2;
@@ -340,8 +345,8 @@ public class GameScreen implements Screen {
 
         // cámara 1 sigue a P1
         camera1.position.set(
-            jugador1.getPosicion().x * UNIT_SCALE,
-            jugador1.getPosicion().y * UNIT_SCALE,
+            jugadores[0].getPosicion().x * UNIT_SCALE,
+            jugadores[0].getPosicion().y * UNIT_SCALE,
             0f
         );
         camera1.update();
@@ -352,13 +357,13 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera1.combined);
         batch.begin();
         // si querés solo P1 acá, podés dejar solo jugador1
-        jugador1.dibujar(batch);
-        jugador2.dibujar(batch);
+        jugadores[0].dibujar(batch);
+        jugadores[1].dibujar(batch);
         batch.end();
 
         // Indicador P1 en su mitad
-        float p1x = (jugador1.getBounds().x + jugador1.getBounds().width  * 1.5f) * UNIT_SCALE;
-        float p1y = (jugador1.getBounds().y + jugador1.getBounds().height * 1.5f) * UNIT_SCALE;
+        float p1x = (jugadores[0].getBounds().x + jugadores[0].getBounds().width  * 1.5f) * UNIT_SCALE;
+        float p1y = (jugadores[0].getBounds().y + jugadores[0].getBounds().height * 1.5f) * UNIT_SCALE;
         p1Indicator.renderWorld(p1x, p1y, camera1, delta);
 
 
@@ -369,8 +374,8 @@ public class GameScreen implements Screen {
 
         // cámara 2 sigue a P2
         camera2.position.set(
-            jugador2.getPosicion().x * UNIT_SCALE,
-            jugador2.getPosicion().y * UNIT_SCALE,
+            jugadores[1].getPosicion().x * UNIT_SCALE,
+            jugadores[1].getPosicion().y * UNIT_SCALE,
             0f
         );
         camera2.update();
@@ -381,13 +386,13 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera2.combined);
         batch.begin();
         // si querés solo P2 acá, podés dejar solo jugador2
-        jugador1.dibujar(batch);
-        jugador2.dibujar(batch);
+        jugadores[0].dibujar(batch);
+        jugadores[1].dibujar(batch);
         batch.end();
 
         // Indicador P2 en su mitad
-        float p2x = (jugador2.getBounds().x + jugador2.getBounds().width  * 1.5f) * UNIT_SCALE;
-        float p2y = (jugador2.getBounds().y + jugador2.getBounds().height * 1.5f) * UNIT_SCALE;
+        float p2x = (jugadores[1].getBounds().x + jugadores[1].getBounds().width  * 1.5f) * UNIT_SCALE;
+        float p2y = (jugadores[1].getBounds().y + jugadores[1].getBounds().height * 1.5f) * UNIT_SCALE;
         p2Indicator.renderWorld(p2x, p2y, camera2, delta);
 
         // ===== VOLVER A PANTALLA COMPLETA (UI / DIVISOR) =====
@@ -401,10 +406,10 @@ public class GameScreen implements Screen {
         shapeRenderer.end();
 
         // --- HUD ---
-        hud.setP1NearDealer(p1NearDealer);
-        hud.setP2NearDealer(p2NearDealer);
-        hud.setP1NearDrop(p1NearDrop);
-        hud.setP2NearDrop(p2NearDrop);
+        hud.setP1NearDealer(nearDealer[0]);
+        hud.setP2NearDealer(nearDealer[1]);
+        hud.setP1NearDrop(nearDrop[0]);
+        hud.setP2NearDrop(nearDrop[1]);
         hud.setDeliveryStatus1(
             (p1Delivery == null) ? "Pedido: ninguno"
                 : (p1Delivery.dangerous ? "Pedido: PELIGROSO $" + p1Delivery.reward
@@ -415,7 +420,7 @@ public class GameScreen implements Screen {
                 : (p2Delivery.dangerous ? "Pedido: PELIGROSO $" + p2Delivery.reward
                 : "Pedido: Normal $" + p2Delivery.reward)
         );
-        hud.render(jugador1, jugador2, player1InGasArea, player2InGasArea);
+        hud.render(jugadores[0], jugadores[1], playerInGasArea[0], playerInGasArea[1]);
 
         // --- ESC → Options ---
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -484,8 +489,45 @@ public class GameScreen implements Screen {
         d.target = randomEntrega();
         if (d.target == null) return null;
         d.dangerous = rng.nextFloat() < 0.25f; // 25% peligroso
-        d.reward = d.dangerous ? 60 : 30;
+        d.reward = d.dangerous ? 100 : 50;
         return d;
+    }
+
+    private void checkDeathAndEndMatch() {
+        if (jugadores == null || jugadores.length < 2) return;
+
+        int vida1 = jugadores[0].getVida();
+        int vida2 = jugadores[1].getVida();
+
+        // Si los dos siguen vivos, no hacemos nada
+        if (vida1 > 0 && vida2 > 0) return;
+
+        int winnerIndex;
+        if (vida1 <= 0 && vida2 > 0) {
+            // Murió P1, gana P2
+            winnerIndex = 2;
+        } else if (vida2 <= 0 && vida1 > 0) {
+            // Murió P2, gana P1
+            winnerIndex = 1;
+        } else {
+            // Ambos llegaron a 0 (choque fuerte, por ejemplo) → empate
+            // Si querés, podés tratar esto distinto.
+            winnerIndex = 0;
+        }
+
+        // Opcional: parar música del juego
+        if (audio != null) {
+            try {
+                audio.stopMusic();
+            } catch (Exception ignored) {}
+        }
+
+        if (game instanceof Main) {
+            ((Main) game).onMatchFinished(winnerIndex);
+        } else {
+            // Fallback muy defensivo, casi seguro no lo vas a usar
+            game.setScreen(new MainMenuScreen(game, audio));
+        }
     }
 
     @Override
@@ -510,8 +552,9 @@ public class GameScreen implements Screen {
         batch.dispose();
         tiledMap.dispose();
         tiledMapRenderer.dispose();
-        jugador1.dispose();
-        jugador2.dispose();
+        for(int i = 0; i < jugadores.length; i++) {
+            jugadores[i].dispose();
+        }
         shapeRenderer.dispose();
         p1Indicator.dispose();
         p2Indicator.dispose();

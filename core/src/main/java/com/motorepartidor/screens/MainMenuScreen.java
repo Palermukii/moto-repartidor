@@ -1,6 +1,7 @@
 package com.motorepartidor.screens;
 
 import com.badlogic.gdx.Audio;
+import com.motorepartidor.Main;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -36,6 +37,8 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private AudioManager audio;
+    private Label resultP1Label;
+    private Label resultP2Label;
 
     public MainMenuScreen(Game game, AudioManager audio) {
         this.game = game;
@@ -66,6 +69,34 @@ public class MainMenuScreen implements Screen {
 
         Label title = new Label("Moto Repartidor", skin);
         title.setFontScale(1.1f);
+
+        // NUEVO: preparar labels de resultado
+        resultP1Label = new Label("", skin);
+        resultP2Label = new Label("", skin);
+
+        if (game instanceof Main) {
+            int lastWinner = ((Main) game).getLastWinner();
+            String txtP1 = "";
+            String txtP2 = "";
+
+            if (lastWinner == 1) {
+                // Ganó Jugador 1
+                txtP1 = "Jugador 1: Has ganado";
+                txtP2 = "Jugador 2: Has perdido";
+                resultP1Label.setColor(Color.GREEN);
+                resultP2Label.setColor(Color.RED);
+            } else if (lastWinner == 2) {
+                // Ganó Jugador 2
+                txtP1 = "Jugador 1: Has perdido";
+                txtP2 = "Jugador 2: Has ganado";
+                resultP1Label.setColor(Color.RED);
+                resultP2Label.setColor(Color.GREEN);
+            }
+            // Si lastWinner == 0 no mostramos nada
+
+            resultP1Label.setText(txtP1);
+            resultP2Label.setText(txtP2);
+        }
 
         TextButton playBtn = new TextButton("Jugar", skin);
         TextButton optionsBtn = new TextButton("Opciones", skin);
@@ -102,6 +133,15 @@ public class MainMenuScreen implements Screen {
 
         root.add(title).padBottom(20);
         root.row();
+
+        // NUEVO: mostrar resultado solo si hay texto
+        if (resultP1Label != null && resultP1Label.getText().length() > 0) {
+            root.add(resultP1Label);
+            root.row();
+            root.add(resultP2Label);
+            root.row();
+        }
+
         root.add(playBtn).width(280).height(60);
         root.row();
         root.add(optionsBtn).width(280).height(60);

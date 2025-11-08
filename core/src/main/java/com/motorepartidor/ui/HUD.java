@@ -97,7 +97,7 @@ public class HUD {
         font.draw(hudBatch, "Dinero: $" + jugador2.getDinero(), x2, Gdx.graphics.getHeight() - 100);
 
         font.draw(hudBatch, deliveryStatus2, x2, Gdx.graphics.getHeight() - 130);
-        int restaj2 = 100 - (int)jugador1.getGasolina();
+        int restaj2 = 100 - (int)jugador2.getGasolina();
         if (player2InGasArea) font.draw(hudBatch, "[P] Cargar nafta " + restaj2 + "$", x2, Gdx.graphics.getHeight() - 145);
         if (!deliveryStatus2.toLowerCase().contains("ninguno") && p2NearDrop)
             font.draw(hudBatch, "[L] Entregar", x2, Gdx.graphics.getHeight() - 160);
