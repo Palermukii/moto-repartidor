@@ -92,6 +92,12 @@ public class MainMenuScreen implements Screen {
                 resultP1Label.setColor(Color.RED);
                 resultP2Label.setColor(Color.GREEN);
             }
+            if(lastWinner == 3) {
+                txtP1 = "Empate";
+                txtP2 = "Empate";
+                resultP1Label.setColor(Color.GRAY);
+                resultP2Label.setColor(Color.GRAY);
+            }
             // Si lastWinner == 0 no mostramos nada
 
             resultP1Label.setText(txtP1);
