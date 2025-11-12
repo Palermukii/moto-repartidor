@@ -332,7 +332,7 @@ public class GameScreen implements Screen {
             playersAreColliding = false;
         }
 
-        checkDeathAndEndMatch();
+        checkEndMatch();
 
 
 
@@ -489,43 +489,65 @@ public class GameScreen implements Screen {
         d.target = randomEntrega();
         if (d.target == null) return null;
         d.dangerous = rng.nextFloat() < 0.25f; // 25% peligroso
-        d.reward = d.dangerous ? 100 : 50;
+        d.reward = d.dangerous ? 130 : 65;
         return d;
     }
 
-    private void checkDeathAndEndMatch() {
+    private void checkEndMatch() {
         if (jugadores == null || jugadores.length < 2) return;
 
         int vida1 = jugadores[0].getVida();
         int vida2 = jugadores[1].getVida();
+        int plata1 = jugadores[0].getDinero();
+        int plata2 = jugadores[1].getDinero();
 
-        // Si los dos siguen vivos, no hacemos nada
-        if (vida1 > 0 && vida2 > 0) return;
-
-        int winnerIndex;
-        if (vida1 <= 0 && vida2 > 0) {
-            // Murió P1, gana P2
-            winnerIndex = 2;
-        } else if (vida2 <= 0 && vida1 > 0) {
-            // Murió P2, gana P1
-            winnerIndex = 1;
-        } else {
-            // Ambos llegaron a 0 (choque fuerte, por ejemplo) → empate
-            // Si querés, podés tratar esto distinto.
-            winnerIndex = 0;
+        // --- 1. Condición para SEGUIR JUGANDO (Guard Clause) ---
+        // Si ambos siguen vivos Y ninguno llegó a 1000$, no hacemos nada.
+        if ((vida1 > 0 && vida2 > 0) && (plata1 < 1000 && plata2 < 1000)) {
+            return;
         }
 
-        // Opcional: parar música del juego
+        // --- 2. Si salimos del 'if' anterior, la partida TERMINÓ ---
+        // Ahora determinamos el resultado usando una estructura if-else if-else
+        // para asegurar que solo se elija UN resultado.
+
+        int winnerIndex;
+
+        // --- 3. Condición de EMPATE (Máxima prioridad) ---
+        // Ambos mueren AL MISMO TIEMPO
+        // O ambos llegan a 1000 AL MISMO TIEMPO.
+        if ((vida1 <= 0 && vida2 <= 0) || (plata1 >= 1000 && plata2 >= 1000)) {
+            winnerIndex = 3; // 3 = Empate
+        }
+
+        // --- 4. Condición de Victoria JUGADOR 2 (Segunda prioridad) ---
+        // J1 murió (y J2 no) O J2 llegó a 1000 (y J1 no).
+        else if (vida1 <= 0 || plata2 >= 1000) {
+            winnerIndex = 2; // 2 = Gana Jugador 2
+        }
+
+        // --- 5. Condición de Victoria JUGADOR 1 (Última opción) ---
+        // Si no es empate Y no ganó J2, J1 debe haber ganado.
+        // (J2 murió O J1 llegó a 1000)
+        else {
+            // Esto cubre los casos restantes:
+            // (vida2 <= 0 || plata1 >= 1000)
+            winnerIndex = 1; // 1 = Gana Jugador 1
+        }
+
+        // --- 6. Finalizar la partida ---
+
+        // Parar música del juego
         if (audio != null) {
             try {
                 audio.stopMusic();
             } catch (Exception ignored) {}
         }
 
+        // Llamar a la pantalla de resultado
         if (game instanceof Main) {
             ((Main) game).onMatchFinished(winnerIndex);
         } else {
-            // Fallback muy defensivo, casi seguro no lo vas a usar
             game.setScreen(new MainMenuScreen(game, audio));
         }
     }
